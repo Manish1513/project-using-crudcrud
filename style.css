@@ -1,38 +1,54 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     text-align: center;
+    color: #333;
 }
 
 form {
-    max-width: 300px;
-    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 label {
-    display: block;
-    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 input {
-    width: 100%;
     padding: 8px;
-    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 button {
-    background-color: #4caf50;
-    color: white;
+    background-color: #007BFF;
+    color: #fff;
     padding: 10px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
+}
+
+#userDetailsContainer {
+    margin-top: 20px;
 }
 
 ul {
@@ -41,16 +57,24 @@ ul {
 }
 
 li {
-    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    padding: 10px;
 }
 
-.edit-btn,
-.delete-btn {
-    margin-top: 10px;
-    margin-left: 10px;
+button.edit-btn,
+button.delete-btn {
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 10px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-#userDetailsContainer{
-    margin-left: 35%;
+button.edit-btn:hover,
+button.delete-btn:hover {
+    background-color: #218838;
 }
