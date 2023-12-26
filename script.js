@@ -1,44 +1,32 @@
-const form = document.getElementById('userForm');
-const submitBtn = document.getElementById('submitBtn');
-const userList = document.getElementById('userList');
-
-form.addEventListener('submit', function (event) {
+function saveToLocalStorage(event) {
     event.preventDefault();
-    addUser();
-});
-
-submitBtn.addEventListener('click', addUser);
-
-function addUser() {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
+    const name = event.target.username.value;
+    const email = event.target.email.value;
+    const phone = event.target.phone.value;
 
     const userDetail = {
-        name: name,
-        email: email,
-        phone: phone
+        name,
+        email,
+        phone
     };
 
-    axios.post("https://crudcrud.com/api/13b1fc5cc0b347cfb8b0e50ad2cdd54a/appointmentData", userDetail)
+    axios.post("https://crudcrud.com/api/e9f97145ed114f1d838f298098cd5f4d/appointmentData", userDetail)
         .then((response) => {
-            displayUserList(response.data); 
+            displayUserList(response.data);
         })
         .catch((err) => {
-            document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>";
+            document.body.innerHTML = "<h4>Something went wrong</h4>";
             console.log(err);
         });
 
-    form.reset();
+    event.target.reset();
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/13b1fc5cc0b347cfb8b0e50ad2cdd54a/appointmentData")
+window.addEventListener('DOMContentLoaded', () => {
+    axios.get("https://crudcrud.com/api/e9f97145ed114f1d838f298098cd5f4d/appointmentData")
         .then((response) => {
-            console.log(response);
             for (var i = 0; i < response.data.length; i++) {
-                const user = response.data[i];
-                displayUserList(user);
+                showNewUserOnScreen(response.data[i]);
             }
         })
         .catch((err) => {
@@ -46,32 +34,40 @@ window.addEventListener("DOMContentLoaded", () => {
         });
 });
 
-function displayUserList(user) {
-    // Create a new list item for each user
-    const li = document.createElement('li');
-    const email = user.email;
-    li.innerHTML = `${user.name} - ${user.email} - ${user.phone} <button class="edit-btn" onclick="editUser('${email}')">Edit</button> <button class="delete-btn" onclick="deleteUser('${email}')">Delete</button>`;
+function showNewUserOnScreen(user) {
+    const parentNode = document.getElementById('ListofUsers');
 
-    // Append the new list item to the user list
-    userList.appendChild(li);
+    const childHTML = `<li id="${user._id}">
+        ${user.name} - ${user.email} 
+        <button onclick="deleteUser('${user._id}')">Delete</button>
+        <button onclick="editUserDetails('${user._id}','${user.name}','${user.phone}')">Edit</button>
+    </li>`;
 
-    // Add event listeners for edit and delete buttons
-    const editButtons = document.querySelectorAll('.edit-btn');
-    editButtons.forEach(button => {
-        button.addEventListener('click', editUser);
-    });
-
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', deleteUser);
-    });
+    parentNode.innerHTML = parentNode.innerHTML + childHTML;
 }
 
-function editUser(event) {
-    // Handle edit logic here using data from the API
-    // Update the input fields with the existing user details
+// Edit user
+function editUserDetails(userId, name, phoneNumber) {
+    document.getElementById('email').value = userId;
+    document.getElementById('username').value = name;
+    document.getElementById('phone').value = phoneNumber;
 }
 
-function deleteUser(event) {
-    displayUserList([]);
+// Delete user
+function deleteUser(userId) {
+    axios.delete(`https://crudcrud.com/api/e9f97145ed114f1d838f298098cd5f4d/appointmentData/${userId}`)
+        .then((response) => {
+            removeUserFromScreen(userId);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+function removeUserFromScreen(userId) {
+    const parentNode = document.getElementById('ListofUsers');
+    const childNodeToBeDeleted = document.getElementById(userId);
+    if (childNodeToBeDeleted) {
+        parentNode.removeChild(childNodeToBeDeleted);
+    }
 }
